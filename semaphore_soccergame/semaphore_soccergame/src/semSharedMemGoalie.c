@@ -154,6 +154,7 @@ static void arrive(int id)
 
     /* TODO: insert your code here */
     sh->fSt.st.goalieStat[id] = ARRIVING;
+    sh->fSt.goaliesArrived++;
     saveState(nFic, &sh->fSt);
 
     if (semUp(semgid, sh->mutex) == -1)
@@ -191,6 +192,14 @@ static int goalieConstituteTeam(int id)
     }
 
     /* TODO: insert your code here */
+
+    // if goalie is late -> update state and leave
+    // goalie is late when we already have goalies
+    if (sh->fSt.nGoalies >= 2)
+    {
+        sh->fSt.st.goalieStat[id] = LATE;
+        saveState(nFic, &sh->fSt);
+    }
 
     if (semUp(semgid, sh->mutex) == -1)
     { /* exit critical region */
