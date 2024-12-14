@@ -153,7 +153,7 @@ static void arrive(int id)
     }
 
     /* TODO: insert your code here */
-    sh->fSt.st.refereeStat = ARRIVING;
+    sh->fSt.st.goalieStat[id] = ARRIVING;
     saveState(nFic, &sh->fSt);
 
     if (semUp(semgid, sh->mutex) == -1)
