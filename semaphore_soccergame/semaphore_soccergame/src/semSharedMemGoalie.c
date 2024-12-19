@@ -148,7 +148,7 @@ static void arrive(int id)
 {
     if (semDown(semgid, sh->mutex) == -1)
     { /* enter critical region */
-        perror("error on the up operation for semaphore access (GL)");
+        perror("error on the down operation for semaphore access (GL)");
         exit(EXIT_FAILURE);
     }
 
@@ -160,7 +160,7 @@ static void arrive(int id)
 
     if (semUp(semgid, sh->mutex) == -1)
     { /* exit critical region */
-        perror("error on the down operation for semaphore access (GL)");
+        perror("error on the up operation for semaphore access (GL)");
         exit(EXIT_FAILURE);
     }
 
@@ -188,7 +188,7 @@ static int goalieConstituteTeam(int id)
 
     if (semDown(semgid, sh->mutex) == -1)
     { /* enter critical region */
-        perror("error on the up operation for semaphore access (GL)");
+        perror("error on the down operation for semaphore access (GL)");
         exit(EXIT_FAILURE);
     }
 
@@ -205,7 +205,7 @@ static int goalieConstituteTeam(int id)
         // exit early
         if (semUp(semgid, sh->mutex) == -1)
         { /* exit critical region */
-            perror("error on the down operation for semaphore access (GL)");
+            perror("error on the up operation for semaphore access (GL)");
             exit(EXIT_FAILURE);
         }
 
@@ -258,7 +258,7 @@ static int goalieConstituteTeam(int id)
 
     if (semUp(semgid, sh->mutex) == -1)
     { /* exit critical region */
-        perror("error on the down operation for semaphore access (GL)");
+        perror("error on the up operation for semaphore access (GL)");
         exit(EXIT_FAILURE);
     }
 
@@ -311,7 +311,7 @@ static void waitReferee(int id, int team)
 {
     if (semDown(semgid, sh->mutex) == -1)
     { /* enter critical region */
-        perror("error on the up operation for semaphore access (GL)");
+        perror("error on the down operation for semaphore access (GL)");
         exit(EXIT_FAILURE);
     }
 
@@ -361,7 +361,7 @@ static void playUntilEnd(int id, int team)
 {
     if (semDown(semgid, sh->mutex) == -1)
     { /* enter critical region */
-        perror("error on the up operation for semaphore access (GL)");
+        perror("error on the down operation for semaphore access (GL)");
         exit(EXIT_FAILURE);
     }
 
@@ -373,7 +373,7 @@ static void playUntilEnd(int id, int team)
 
     if (semUp(semgid, sh->mutex) == -1)
     { /* exit critical region */
-        perror("error on the down operation for semaphore access (GL)");
+        perror("error on the up operation for semaphore access (GL)");
         exit(EXIT_FAILURE);
     }
 
