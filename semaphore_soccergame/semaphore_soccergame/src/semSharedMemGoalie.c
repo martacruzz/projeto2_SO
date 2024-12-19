@@ -317,13 +317,35 @@ static void waitReferee(int id, int team)
 
     /* TODO: insert your code here */
 
+    // update goalie's state accordingly to team id
+    sh->fSt.st.goalieStat[id] = (team == 1) ? WAITING_START_1 : WAITING_START_2;
+    // does the same as the code above
+    // if (team == 1)
+    // {
+    //     sh->fSt.st.goalieStat[id] = WAITING_START_1;
+    // }
+    // else
+    // {
+    //     sh->fSt.st.goalieStat[id] = WAITING_START_2;
+    // }
+
+    // save state
+    saveState(nFic, &sh->fSt);
+
     if (semUp(semgid, sh->mutex) == -1)
     { /* exit critical region */
-        perror("error on the down operation for semaphore access (GL)");
+        perror("error on the up operation for semaphore access (GL)");
         exit(EXIT_FAILURE);
     }
 
     /* TODO: insert your code here */
+
+    // wait for referee to start match
+    if (semDown(semgid, sh->playersWaitReferee) == -1)
+    {
+        perror("error on the down operation for semaphore access (GL)");
+        exit(EXIT_FAILURE);
+    }
 }
 
 /**
