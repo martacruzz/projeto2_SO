@@ -367,6 +367,10 @@ static void playUntilEnd(int id, int team)
 
     /* TODO: insert your code here */
 
+    // change goalie state to playing
+    sh->fSt.st.goalieStat[id] = (team == 1) ? PLAYING_1 : PLAYING_2;
+    saveState(nFic, &sh->fSt);
+
     if (semUp(semgid, sh->mutex) == -1)
     { /* exit critical region */
         perror("error on the down operation for semaphore access (GL)");
@@ -374,4 +378,10 @@ static void playUntilEnd(int id, int team)
     }
 
     /* TODO: insert your code here */
+    // wait for ref to end game
+    if (semDown(semgid, sh->playersWaitEnd) == -1)
+    {
+        perror("error on the down operation for semaphore access (GL)");
+        exit(EXIT_FAILURE);
+    }
 }
