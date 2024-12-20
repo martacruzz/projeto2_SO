@@ -214,7 +214,7 @@ static int goalieConstituteTeam(int id)
     else
     {
         // check if there are enough free players to form a team
-        if (sh->fSt.playersFree >= NUMTEAMPLAYERS)
+        if (sh->fSt.playersFree >= NUMTEAMPLAYERS && sh->fSt.goaliesFree >= NUMTEAMGOALIES)
         {
             // mark players as non-free
             sh->fSt.playersFree -= NUMTEAMPLAYERS;
@@ -234,7 +234,7 @@ static int goalieConstituteTeam(int id)
                 }
             }
 
-            // wait for players to aknowledge
+            // wait for players to aknowledge -> here we need to wait for aknowledgement of 4 players
             for (int player = 0; player < NUMTEAMPLAYERS; player++)
             {
                 if (semDown(semgid, sh->playerRegistered) == -1)
