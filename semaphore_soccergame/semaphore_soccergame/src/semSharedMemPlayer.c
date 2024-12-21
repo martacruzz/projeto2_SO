@@ -369,7 +369,7 @@ static void playUntilEnd(int id, int team)
 
     /* TODO: insert your code here */
 
-    // wait for ref to end game
+    // wait for ref to end match
     if (semDown(semgid, sh->playersWaitEnd) == -1)
     {
         perror("error on the down operation for semaphore access (PL)");
