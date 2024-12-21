@@ -155,8 +155,6 @@ static void arrive(int id)
     /* TODO: insert your code here */
     sh->fSt.st.goalieStat[id] = ARRIVING;
     saveState(nFic, &sh->fSt);
-    sh->fSt.goaliesArrived++;
-    sh->fSt.goaliesFree++;
 
     if (semUp(semgid, sh->mutex) == -1)
     { /* exit critical region */
@@ -194,13 +192,17 @@ static int goalieConstituteTeam(int id)
 
     /* TODO: insert your code here */
 
+    // update counters
+    sh->fSt.goaliesArrived++;
+    sh->fSt.goaliesFree++;
+
     // if goalie is late -> update state and leave
     // goalie is late when we already have 2 goalies
     if (sh->fSt.goaliesArrived > 2)
     {
         sh->fSt.st.goalieStat[id] = LATE;
-        saveState(nFic, &sh->fSt);
         sh->fSt.goaliesFree -= 1;
+        saveState(nFic, &sh->fSt);
 
         // exit early
         if (semUp(semgid, sh->mutex) == -1)
@@ -222,7 +224,6 @@ static int goalieConstituteTeam(int id)
 
             // change goalie state to forming team
             sh->fSt.st.goalieStat[id] = FORMING_TEAM;
-            saveState(nFic, &sh->fSt);
 
             // unblock players that were waiting to form a team
             for (int player = 0; player < NUMTEAMPLAYERS; player++)
@@ -247,6 +248,7 @@ static int goalieConstituteTeam(int id)
             // form team
             ret = sh->fSt.teamId;
             sh->fSt.teamId++;
+            saveState(nFic, &sh->fSt);
         }
         else
         {

@@ -155,9 +155,6 @@ static void arrive(int id)
     // change state of player to arriving
     sh->fSt.st.playerStat[id] = ARRIVING;
     saveState(nFic, &sh->fSt);
-    // update counters
-    sh->fSt.playersArrived++;
-    sh->fSt.playersFree++;
 
     if (semUp(semgid, sh->mutex) == -1)
     { /* exit critical region */
@@ -195,6 +192,10 @@ static int playerConstituteTeam(int id)
 
     /* TODO: insert your code here */
 
+    // update counters -> has to be done here so it does not have any dead locks (initially i did it in the arrive() function but i was having dead lock problems)
+    sh->fSt.playersArrived++;
+    sh->fSt.playersFree++;
+
     // if player is late -> update its state and leave
     // player is late if there are already 8 players
     if (sh->fSt.playersArrived > 8)
@@ -221,7 +222,6 @@ static int playerConstituteTeam(int id)
 
             // change player state to FORMING_TEAM
             sh->fSt.st.playerStat[id] = FORMING_TEAM;
-            saveState(nFic, &sh->fSt);
 
             // unblock the other players that are waiting to form a team
             for (int player = 0; player < 3; player++)
@@ -250,6 +250,7 @@ static int playerConstituteTeam(int id)
             // update team id
             ret = sh->fSt.teamId;
             sh->fSt.teamId++;
+            saveState(nFic, &sh->fSt);
         }
         else // player is not captain
         {
