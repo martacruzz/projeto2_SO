@@ -224,6 +224,7 @@ static int goalieConstituteTeam(int id)
 
             // change goalie state to forming team
             sh->fSt.st.goalieStat[id] = FORMING_TEAM;
+            saveState(nFic, &sh->fSt);
 
             // unblock players that were waiting to form a team
             for (int player = 0; player < NUMTEAMPLAYERS; player++)
@@ -248,7 +249,6 @@ static int goalieConstituteTeam(int id)
             // form team
             ret = sh->fSt.teamId;
             sh->fSt.teamId++;
-            saveState(nFic, &sh->fSt);
         }
         else
         {

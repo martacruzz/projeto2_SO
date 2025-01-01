@@ -223,6 +223,7 @@ static int playerConstituteTeam(int id)
 
             // change player state to FORMING_TEAM
             sh->fSt.st.playerStat[id] = FORMING_TEAM;
+            saveState(nFic, &sh->fSt);
 
             // unblock the other players that are waiting to form a team
             for (int player = 0; player < 3; player++)
@@ -241,7 +242,7 @@ static int playerConstituteTeam(int id)
                 exit(EXIT_FAILURE);
             }
 
-            // wait for player's aknowledgement -> here we need to wait for 3 players and 1 goalie (4 players)
+            // wait for player's aknowledgement -> here we need to wait for 3 players and 1 goalie (4 in total)
             for (int player = 0; player < 4; player++)
             {
                 if (semDown(semgid, sh->playerRegistered) == -1)
@@ -254,7 +255,6 @@ static int playerConstituteTeam(int id)
             // update team id
             ret = sh->fSt.teamId;
             sh->fSt.teamId++;
-            saveState(nFic, &sh->fSt);
         }
         else // player is not captain
         {
