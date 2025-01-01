@@ -201,6 +201,7 @@ static int playerConstituteTeam(int id)
     if (sh->fSt.playersArrived > 8)
     {
         sh->fSt.st.playerStat[id] = LATE;
+        sh->fSt.playersFree--;
         saveState(nFic, &sh->fSt);
 
         if (semUp(semgid, sh->mutex) == -1)
@@ -233,7 +234,7 @@ static int playerConstituteTeam(int id)
                 }
             }
 
-            // ublock the goalie
+            // unblock the goalie
             if (semUp(semgid, sh->goaliesWaitTeam) == -1)
             {
                 perror("error on the up operation for semaphore access (PL)");
@@ -241,10 +242,13 @@ static int playerConstituteTeam(int id)
             }
 
             // wait for player's aknowledgement -> here we need to wait for 3 players and 1 goalie (4 players)
-            if (semDown(semgid, sh->playerRegistered) == -1)
+            for (int player = 0; player < 4; player++)
             {
-                perror("error on the down operation for semaphore access (PL)");
-                exit(EXIT_FAILURE);
+                if (semDown(semgid, sh->playerRegistered) == -1)
+                {
+                    perror("error on the down operation for semaphore access (PL)");
+                    exit(EXIT_FAILURE);
+                }
             }
 
             // update team id
@@ -369,6 +373,13 @@ static void playUntilEnd(int id, int team)
     }
 
     /* TODO: insert your code here */
+
+    // tell referee it has started playing
+    if (semUp(semgid, sh->playing) == -1)
+    {
+        perror("error on the down operation for semaphore access (GL)");
+        exit(EXIT_FAILURE);
+    }
 
     // wait for ref to end match
     if (semDown(semgid, sh->playersWaitEnd) == -1)

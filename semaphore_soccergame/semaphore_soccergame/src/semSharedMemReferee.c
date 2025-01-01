@@ -239,6 +239,16 @@ static void startGame()
             exit(EXIT_FAILURE);
         }
     }
+
+    // referee waits for players and goalies to start playing
+    for (int player = 0; player < 2 * (NUMTEAMPLAYERS + NUMTEAMGOALIES); player++)
+    {
+        if (semDown(semgid, sh->playing) == -1)
+        {
+            perror("error on the up operation for semaphore access (RF)");
+            exit(EXIT_FAILURE);
+        }
+    }
 }
 
 /**
